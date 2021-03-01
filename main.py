@@ -12,7 +12,7 @@ import requests
 from bs4 import BeautifulSoup
 from colorama import init, Fore
 
-suffix = "LINK"
+suffix = "link"
 base_url = "https://ctrlv." + suffix + "/{}"
 lock = Lock()
 hits = 0
@@ -31,28 +31,28 @@ def update_title():
 
 def load_tries():
     global tried
-    file_path = 'tried' + suffix + '.txt'
+    file_path = 'tried' + suffix.upper() + '.txt'
     if path.exists(file_path):
         with open(file_path) as f:
             tried = f.read().split('\n');
 
 
 def check_if_dir_exists():
-    os.makedirs('./imgs' + suffix, exist_ok=True)
+    os.makedirs('./imgs' + suffix.upper(), exist_ok=True)
 
 
 def save_tries():
-    with open('tried' + suffix + '.txt', 'w') as f:
+    with open('tried' + suffix.upper() + '.txt', 'w') as f:
         for item in tried:
             f.write("%s\n" % item)
 
 
 def download_file(url, name):
-    urllib.request.urlretrieve(url, './imgs' + suffix + '/' + name)
+    urllib.request.urlretrieve(url, './imgs' + suffix.upper() + '/' + name)
     url_split = url.split('/')
     created_time = time.mktime(
         datetime.datetime.strptime(url_split[6] + "/" + url_split[5] + "/" + url_split[4], "%d/%m/%Y").timetuple())
-    os.utime('./imgs' + suffix + '/' + name, (created_time, created_time))
+    os.utime('./imgs' + suffix.upper() + '/' + name, (created_time, created_time))
 
 
 def worker():
@@ -73,7 +73,7 @@ def worker():
                 print(Fore.GREEN + f'[VALID] {base_url.format(random_string)}')
                 lock.release()
                 hits += 1
-                download_file("https://ctrlv.cz" + src, random_string + ".png")
+                download_file("https://ctrlv." + suffix + src, random_string + ".png")
             else:
                 lock.acquire()
                 print(Fore.RED + f'[INVALID] {base_url.format(random_string)}')
